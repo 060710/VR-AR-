@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>高级故障诊断 - 工业智能运维系统</title>
+    <style>
+        /* 工业级样式规范 */
+        :root {
+            --primary-blue: #2A5D8A;    /* 主蓝 - 设备主题色 */
+            --status-red: #FF4757;      /* 紧急故障 */
+            --status-yellow: #FFA502;   /* 预警状态 */
+            --status-green: #2ED573;    /* 正常运行 */
+            --background: #F8F9FA;      /* 背景白 */
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--background);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 诊断主容器 */
+        .diagnosis-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 2rem;
+        }
+
+        /* 三维设备视图 */
+        .device-viewport {
+            height: 600px;
+            border: 2px solid var(--primary-blue);
+            border-radius: 8px;
+            position: relative;
+            background: linear-gradient(145deg, #f0f8ff, #ffffff);
+        }
+
+        /* 故障标记系统 */
+        .fault-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--status-red);
+            border-radius: 50%;
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,71,87,0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(255,71,87,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,71,87,0); }
+        }
+
+        /* 诊断数据面板 */
+        .diagnosis-panel {
+            border-left: 3px solid var(--primary-blue);
+            padding-left: 1.5rem;
+        }
+
+        /* 故障代码系统 */
+        .fault-code {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 6px;
+            background: #f8fafb;
+        }
+        .code-severity {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+        .critical-bg { background: var(--status-red); }
+        .warning-bg { background: var(--status-yellow); }
+
+        /* 传感器数据表 */
+        .sensor-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .sensor-table th {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.8rem;
+            text-align: left;
+        }
+        .sensor-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+        .sensor-table tr:hover {
+            background: #f5f7f9;
+        }
+
+        /* 工业级按钮 */
+        .tech-button {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: filter 0.3s;
+        }
+        .tech-button:hover {
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnosis-container">
+        <!-- 三维设备视图 -->
+        <div class="device-viewport">
+            <!-- 故障点标记 -->
+            <div class="fault-marker" style="top: 30%; left: 45%"></div>
+            <div class="fault-marker" style="top: 60%; left: 35%"></div>
+        </div>
+
+        <!-- 诊断数据面板 -->
+        <div class="diagnosis-panel">
+            <h2>TC-2024 故障诊断报告</h2>
+            
+            <!-- 当前状态 -->
+            <div class="status-summary">
+                <h3>⛓ 传动系统状态</h3>
+                <div class="fault-code">
+                    <div class="code-severity critical-bg"></div>
+                    <div>
+                        <strong>F2024</strong> - 轴向振动超标 (ISO 10816-3)
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实时传感器数据 -->
+            <table class="sensor-table">
+                <thead>
+                    <tr>
+                        <th>传感器ID</th>
+                        <th>参数</th>
+                        <th>实时值</th>
+                        <th>阈值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>VIB-203A</td>
+                        <td>振动速度(RMS)</td>
+                        <td style="color: var(--status-red)">7.2 mm/s</td>
+                        <td>≤4.5 mm/s</td>
+                    </tr>
+                    <tr>
+                        <td>TEMP-45B</td>
+                        <td>轴承温度</td>
+                        <td>82°C</td>
+                        <td>≤95°C</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 诊断建议 -->
+            <div class="expert-advice">
+                <h3>🔧 专家修正建议</h3>
+                <ul>
+                    <li>1. 检查联轴器对中偏差 (允许值 ≤0.05mm)</li>
+                    <li>2. 检测电机底座螺栓扭矩 (标准值 120±5Nm)</li>
+                    <li>3. 执行动平衡校正 (G2.5级)</li>
+                </ul>
+            </div>
+
+            <!-- 操作按钮组 -->
+            <div class="action-buttons">
+                <button class="tech-button">导出PDF报告</button>
+                <button class="tech-button">启动AR引导</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
